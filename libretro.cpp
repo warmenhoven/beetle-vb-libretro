@@ -2001,10 +2001,10 @@ extern "C" int StateAction(StateMem *sm, int load, int data_only)
 #define MEDNAFEN_CORE_TIMING_FPS 50.27
 #define MEDNAFEN_CORE_GEOMETRY_BASE_W 384
 #define MEDNAFEN_CORE_GEOMETRY_BASE_H 224
-#define MEDNAFEN_CORE_GEOMETRY_MAX_W (384 * 2)
+#define MEDNAFEN_CORE_GEOMETRY_MAX_W (384 * 2 + 256)
 #define MEDNAFEN_CORE_GEOMETRY_MAX_H (224 * 2)
 #define MEDNAFEN_CORE_GEOMETRY_ASPECT_RATIO (12.0 / 7.0)
-#define FB_WIDTH 384 * 2
+#define FB_WIDTH (384 * 2 + 256)
 #define FB_HEIGHT 224 * 2
 
 
@@ -2217,9 +2217,25 @@ static void check_variables(void)
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
-      setting_vb_cpu_emulation = !strcmp(var.value, "accurate") 
-         ? V810_EMU_MODE_ACCURATE 
+      setting_vb_cpu_emulation = !strcmp(var.value, "accurate")
+         ? V810_EMU_MODE_ACCURATE
          : V810_EMU_MODE_FAST;
+   }
+
+   var.key = "vb_sidebyside_separation";
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      unsigned old_separation = setting_vb_sidebyside_separation;
+
+      setting_vb_sidebyside_separation = strtoul(var.value, NULL, 10);
+
+      if (old_separation != setting_vb_sidebyside_separation)
+      {
+         SettingChanged("vb.3dmode");
+
+         log_cb(RETRO_LOG_INFO, "[%s]: Side-by-side separation changed: %u pixels.\n", mednafen_core_str, setting_vb_sidebyside_separation);
+      }
    }
 }
 

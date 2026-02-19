@@ -30,6 +30,7 @@ uint32_t setting_vb_cpu_emulation=0;
 uint32_t setting_vb_3dmode=0;
 uint32_t setting_vb_liprescale=1;
 uint32_t setting_vb_default_color=0xFFFFFF;
+uint32_t setting_vb_sidebyside_separation=0;
 
 uint64_t MDFN_GetSettingUI(const char *name)
 {
@@ -43,6 +44,8 @@ uint64_t MDFN_GetSettingUI(const char *name)
       return setting_vb_liprescale;
    if (!strcmp("vb.default_color", name))
       return setting_vb_default_color;
+   if (!strcmp("vb.sidebyside.separation", name))
+      return setting_vb_sidebyside_separation;
    return 0;
 }
 
